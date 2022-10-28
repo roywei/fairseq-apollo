@@ -7,7 +7,6 @@
 #SBATCH --ntasks-per-node=8
 #SBATCH --gpus-per-node=8
 #SBATCH --cpus-per-task=10
-##SBATCH --exclude 'a100-st-p4d24xlarge-459'
 #SBATCH --mem=0GB
 #SBATCH --signal=USR1@90
 #SBATCH --open-mode=append
@@ -21,7 +20,7 @@ module load cuda/11.3
 module load nccl/2.12.7-cuda.11.3
 module load nccl_efa/1.2.0-nccl.2.12.7-cuda.11.3
 export SUBMITIT_EXECUTOR=slurm
-source activate mega
+source activate torch11
 
 split=1
 seeds=(22 42 65537 8191 131071)

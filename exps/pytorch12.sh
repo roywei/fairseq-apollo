@@ -23,7 +23,7 @@
 #export SUBMITIT_EXECUTOR=slurm
 #source activate mega
 
-source activate mega12
+source activate torch12
 split=1
 seeds=(22 42 65537 8191 131071)
 seed=${seeds[$split]}
