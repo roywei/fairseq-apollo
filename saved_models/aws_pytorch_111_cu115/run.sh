@@ -46,7 +46,7 @@ DATE=`date +%Y%m%d`
 SAVE_ROOT=saved_models
 DATA=/fsx/datasets/wikitext-103
 model=mega_lm_adaptive_big
-exp_name=cu116_oss_1121
+exp_name=aws_pytorch_111_cu115
 SAVE=${SAVE_ROOT}/${exp_name}
 mkdir -p ${SAVE}
 cp $0 ${SAVE}/run.sh

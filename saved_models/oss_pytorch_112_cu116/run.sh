@@ -56,6 +56,7 @@ export MASTER_PORT=15127
 export WORLD_SIZE=16
 
 export NCCL_DEBUG=INFO
+export NCCL_PROTO=simple
 
 srun -N 2 --nodelist queue1-dy-p4d24xlarge-[5-6]  -n 16 -c 12 --label python -u train.py ${DATA} \
     --seed ${seed} --ddp-backend no_c10d --max-target-positions 8096 --decoder-hidden-dim 2048 \

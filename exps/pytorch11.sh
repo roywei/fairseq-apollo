@@ -15,12 +15,12 @@
 #SBATCH --wckey=submitit
 
 # command
-export MODULEPATH=/data/home/vkhalidov/modulefiles:$MODULEPATH
-module load cuda/11.3
-module load nccl/2.12.7-cuda.11.3
-module load nccl_efa/1.2.0-nccl.2.12.7-cuda.11.3
+#export MODULEPATH=/data/home/vkhalidov/modulefiles:$MODULEPATH
+#module load cuda/11.3
+#module load nccl/2.12.7-cuda.11.3
+#module load nccl_efa/1.2.0-nccl.2.12.7-cuda.11.3
 export SUBMITIT_EXECUTOR=slurm
-source activate torch11
+#source activate torch11
 
 split=1
 seeds=(22 42 65537 8191 131071)
@@ -43,18 +43,21 @@ TOTAL_NUM_UPDATES=400000
 
 DATE=`date +%Y%m%d`
 SAVE_ROOT=saved_models
-DATA=/fsx/chuntinz/data/mega_data/wikitext-103
+DATA=/fsx/datasets/wikitext-103
 model=mega_lm_adaptive_big
-exp_name=cu11_test
+exp_name=cu11_test-efa
 SAVE=${SAVE_ROOT}/${exp_name}
 mkdir -p ${SAVE}
 cp $0 ${SAVE}/run.sh
 
-export MASTER_ADDR=${SLURM_NODELIST:0:20}${SLURM_NODELIST:21:1}
+#export MASTER_ADDR=${SLURM_NODELIST:0:20}${SLURM_NODELIST:21:1}
+
+export MASTER_ADDR=queue1-dy-p4d24xlarge-1
 export MASTER_PORT=15127
 export WORLD_SIZE=16
+export NCCL_DEBUG=INFO 
 
-srun --label python -u train.py ${DATA} \
+srun -N 2 -n 16 -c 12 --label python -u train.py ${DATA} \
     --seed ${seed} --ddp-backend no_c10d --max-target-positions 8096 --decoder-hidden-dim 2048 \
     --valid-subset valid --task language_modeling -a ${model} \
     --activation-fn ${ACTIVATION} --attention-activation-fn ${ATTN_ACT} \
